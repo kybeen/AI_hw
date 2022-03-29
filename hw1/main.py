@@ -27,7 +27,8 @@ for i in range(0, 150):
 # print(knn.X_train)
 # print(knn.y_train)
 
-result = knn.majority_vote()
+#result = knn.majority_vote()
+result = knn.weighted_majority_vote()
 # print(result)
 
 c = 0

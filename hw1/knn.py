@@ -18,31 +18,51 @@ class KNN:
 
     # 거리가 가장 짧은 k개의 neighbor를 구하는 메서드
     def obtain_knn(self, K, arr):
-        temp = [100 for i in range(K)]
+        temp = [100 for i in range(K)]  # k개의 neighbor들을 저장할 리스트
+        pair = [0 for i in range(K)]    # k개의 neighbor들의 레이블을 저장할 리스트
         for i in arr:
             max_t = max(temp)
             if(i < max_t):
-                temp[temp.index(max_t)] = i
-        return temp
+                pair[temp.index(max_t)] = self.y_train[arr.index(i)]    # 더 짧은 neighbor의 레이블로 갱신한다.
+                temp[temp.index(max_t)] = i                             # 더 짧은 neighbor와의 거리로 갱신한다.
+        return temp, pair
     
     # Majority Vote
     def majority_vote(self):
         for i in range( 0, len(self.X_test) ):
             for j in range( 0, len(self.X_train) ):
                 self.distance.append( self.calculate_distance( self.X_test[i],self.X_train[j] ) ) # 두 점 사이의 거리 구한 뒤 distance에 저장
-            temp = self.obtain_knn(self.K, self.distance) # 거리가 가장 짧은 k개의 neighbor 구하기
-            for i in temp:  # neighbor들의 레이블 종류별로 수를 카운트한다.
-                if( self.y_train[self.distance.index(i)] == 0 ):
+            temp, pair = self.obtain_knn(self.K, self.distance) # 거리가 가장 짧은 k개의 neighbor와 해당하는 레이블을 받아옴
+            for i in range(0, len(temp)):  # neighbor들의 레이블 종류별로 수를 카운트한다.
+                if( pair[i] == 0 ):
                     self.vote[0] += 1
-                elif( self.y_train[self.distance.index(i)] == 1 ):
+                elif( pair[i] == 1 ):
                     self.vote[1] += 1
                 else:
                     self.vote[2] += 1
-            self.result.append( self.vote.index(max(self.vote)) )   # 해당 테스트 데이터에 대한 레이블을 result에 저장
+            self.result.append( self.vote.index(max(self.vote)) )   # vote에서 가장 수가 많은 값의 인덱스 값을 result에 추가해준다. (테스트결과)
             # 다음 테스트 데이터로 넘어가기 전에 vote와 distance 초기화
             self.vote = [0, 0, 0]
             self.distance = []
         return self.result
-    
-    # def weighted_majority_vote(self):
-    #     sadasdasdad
+
+    # Weighted Majority Vote
+    def weighted_majority_vote(self):
+        for i in range( 0, len(self.X_test) ):
+            for j in range( 0, len(self.X_train) ):
+                self.distance.append( self.calculate_distance( self.X_test[i],self.X_train[j] ) ) # 두 점 사이의 거리 구한 뒤 distance에 저장
+            temp, pair = self.obtain_knn(self.K, self.distance) # 거리가 가장 짧은 k개의 neighbor와 해당하는 레이블을 받아옴
+            weight = sum(temp)
+            # 단순 수를 세는 것이 아니라 [해당 neighbor와의 거리 / knn의 거리의 합]을 가중치로 하여 1에 가중치를 곱한 값들을 해당 vote값에 더해준다.
+            for i in range(0, len(temp)):  # neighbor들의 레이블 종류별로 
+                if( pair[i] == 0 ):
+                    self.vote[0] += 1 * (temp[i] / weight)
+                elif( pair[i] == 1 ):
+                    self.vote[1] += 1 * (temp[i] / weight)
+                else:
+                    self.vote[2] += 1 * (temp[i] / weight)
+            self.result.append( self.vote.index(max(self.vote)) )   # 가중치까지 고려한 vote값이 가장 큰 인덱스 값을 result에 추가헤준다. (테스트결과)
+            # 다음 테스트 데이터로 넘어가기 전에 vote와 distance 초기화
+            self.vote = [0, 0, 0]
+            self.distance = []
+        return self.result
