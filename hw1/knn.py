@@ -43,6 +43,7 @@ class KNN:
                     self.vote[2] += 1
             self.result.append( self.vote.index(max(self.vote)) )   # vote에서 가장 수가 많은 값의 인덱스 값을 result에 추가해준다. (테스트결과)
             # 다음 테스트 데이터로 넘어가기 전에 vote와 distance 초기화
+            #print(vote)
             self.vote = [0, 0, 0]
             self.distance = []
         return self.result
@@ -62,8 +63,10 @@ class KNN:
                     self.vote[1] += 1 * ( (weight-temp[i]) / weight )
                 else:
                     self.vote[2] += 1 * ( (weight-temp[i]) / weight )
+                #print(i, temp[i], (weight-temp[i]) / weight)
             self.result.append( self.vote.index(max(self.vote)) )   # 가중치까지 고려한 vote값이 가장 큰 인덱스 값을 result에 추가헤준다. (테스트결과)
             # 다음 테스트 데이터로 넘어가기 전에 vote와 distance 초기화
+            #print(vote)
             self.vote = [0, 0, 0]
             self.distance = []
         return self.result
