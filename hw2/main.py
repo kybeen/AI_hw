@@ -34,4 +34,4 @@ for i in range(size):
     if(result[i] == yTest[sample[i]]):
         c += 1
 print(f'Accuracy = {c / size}')
-print(f'10000개 test data 중 {size}개 사용')
+print(f'10000개 test data 중 {size}개 사용 (K = {K})')

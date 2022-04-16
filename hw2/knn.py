@@ -1,3 +1,4 @@
+from turtle import distance
 import numpy as np
 
 class KNN:
@@ -13,6 +14,7 @@ class KNN:
 
     # 두 점 사이의 최단거리 계산 메서드
     def calculate_distance(self, a, b):
+        #return np.sqrt(np.sum(np.power(a-b,2)))
         return np.linalg.norm(a-b)
 
     # 거리가 가장 짧은 k개의 neighbor를 구하는 메서드
@@ -39,7 +41,8 @@ class KNN:
                 self.vote[pair[i]] += 1 * ( (weight-temp[i]) / weight )
             self.result.append( self.vote.index(max(self.vote)) )   # 가중치까지 고려한 vote값이 가장 큰 인덱스 값을 result에 추가헤준다. (테스트결과)
             # 다음 테스트 데이터로 넘어가기 전에 vote와 distance 초기화
-            #print(vote)
+            # print(self.vote)
+            # print(self.distance[0])
             self.vote = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             self.distance = []
         return self.result
