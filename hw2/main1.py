@@ -1,3 +1,4 @@
+# 1. 784개 input feature 그대로 사용
 import sys, os
 sys.path.append(os.pardir) # 부모 디렉토리에서 import
 import numpy as np
@@ -12,23 +13,25 @@ from knn import KNN             # knn.py의 KNN 클래스 import
 label_name = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] # 레이블 이름
 
 # test데이터 랜덤으로 뽑아서 쓰기
-size = 100   # 100
-sample = np.random.randint(0, yTest.shape[0], size)    # 0부터 10000까지의 정수 중에 랜덤으로 100개 뽑기
+size = 100   # 랜덤으로 뽑을 데이터 개수
+sample = np.random.randint(0, yTest.shape[0], size)    # 0부터 10000까지의 정수 중에 랜덤으로 size개 만큼 뽑기
 
 # 랜덤으로 뽑은 데이터를 담을 넘파이 배열
 x_sample = np.empty((0,784), dtype=np.int64)
 y_sample = np.array([], dtype=np.int64)
+# size개 만큼 Test데이터에서 뽑아온 뒤 저장
 for i in sample:
     x_sample = np.append(x_sample, np.array([xTest[i]]), axis=0)
     y_sample = np.append(y_sample, yTest[i])
 
 K = 9   # K 값 설정
 
-knn = KNN(K, xTrain, yTrain, x_sample, y_sample)    # knn 객체 생성
+knn = KNN(K, xTrain, yTrain, x_sample, y_sample)    # knn 객체 생성 (10000개로 테스트 시에는 x_sample, y_sample -> xTest, yTest)
 
 result = knn.weighted_majority_vote()   # weighted_majority_vote를 사용한 knn 알고리즘으로 MNIST classification 수행
 
 c = 0   # 정답 맞춘 횟수
+# Classification 결과와 실제 레이블 값 비교한 결과 출력
 for i in range(size):
     print(f'{sample[i]} th data result {result[i]}   label {yTest[sample[i]]}')
     if(result[i] == yTest[sample[i]]):
