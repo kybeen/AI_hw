@@ -5,16 +5,15 @@ class KNN:
     def __init__(self, K, xTrain, yTrain, xTest, yTest):
         self.K = K                    # 가까운 neighbor로 사용할 k개의 개수 설정
         self.X_train = xTrain     # 손글씨 이미지 train 데이터
-        self.y_train = yTrain     # 손글씨 이미지 train 데이터 라벨
+        self.y_train = yTrain     # 손글씨 이미지 train 데이터 레이블
         self.X_test = xTest      # 손글씨 이미지 test 데이터
-        self.y_test = yTest      # 손글씨 이미지 test 데이터 라벨
+        self.y_test = yTest      # 손글씨 이미지 test 데이터 레이블
         self.distance = []                  # 두 점 사이의 거리 저장할 리스트
-        self.vote = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # 테스트 결과값을 카운트 하기 위한 리스트
+        self.vote = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]   # 테스트 결과값을 weighted majority vote로 카운트 하기 위한 리스트
         self.result = []                # 테스트 데이터의 결과를 저장할 리스트
 
     # 두 점 사이의 최단거리 계산 메서드
     def calculate_distance(self, a, b):
-        #return np.sqrt(np.sum(np.power(a-b,2)))
         return np.linalg.norm(a-b)
 
     # 거리가 가장 짧은 k개의 neighbor를 구하는 메서드
